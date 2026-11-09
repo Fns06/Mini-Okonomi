@@ -7,10 +7,59 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) {
+    private Democracy norway;
+    private Communism mandoria;
+    private Map<COFOG, Double> starter;
 
+    private static final String BOLD = "\u001B[1m";
+    private static final String RESET = "\u001B[0m";
+
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.settup();
+        main.run(2);
+    }
+
+    public void run(int months){
+        for(int i = 0; i < months; i++){
+            if (i == 0) {
+                System.out.println(BOLD + "Starting stats:" + RESET);
+            }
+            else{
+                System.out.println(BOLD + "\nMonth number " + i + RESET);
+            }
+            
+            System.out.println("---------------------------------------");
+            System.out.println(norway + "\n");
+            //norway.addMoney(1000000);
+
+            System.out.println("---------------------------------------");
+            System.out.println(mandoria + "\n");
+        }
+    }
+
+    public void settup() {
+        Party[] partyList1 = getPartyList1();
+
+        //The democracy of Norway
+        norway = new Democracy("Norway", 5000, 200000, 0.30, starter, 100, partyList1);
+
+        mandoria = new Communism("Mandoria",7000, 400000, 0.40, starter);
+    }
+
+    public void holeBugetUsed(Map<COFOG, Double> budget){
+        double sum = 0;
+        for(double procent : budget.values()){
+            sum += procent;
+        }
+        if (Math.abs(sum - 100) > 0.0001) {
+            throw new IllegalArgumentException("All the buget is not used");
+        }
+    }
+
+    public Party[] getPartyList1(){
         //Starter budgets
-        Map<COFOG, Double> starter = new EnumMap<>(COFOG.class);
+        starter = new EnumMap<>(COFOG.class);
         starter.put(COFOG.HEALTH, 20.0);
         starter.put(COFOG.DEFENCE, 20.0);
         starter.put(COFOG.EDUCATION, 20.0);
@@ -18,7 +67,8 @@ public class Main {
         starter.put(COFOG.PUBLIC_ORDER_AND_SAFETY, 20.0);
         holeBugetUsed(starter);
 
-        //Some wanted budgets for some parties
+
+        //Some wanted budgets for parties
         Map<COFOG, Double> browns = new EnumMap<>(COFOG.class);
         browns.put(COFOG.HEALTH, 20.0);
         browns.put(COFOG.DEFENCE, 20.0);
@@ -49,22 +99,6 @@ public class Main {
             new Party("Reds", reds),
             new Party("Blues", blues)
         };
-
-        //The democracy of Norway
-        Democracy norway = new Democracy("Norway", 5000, 200000, starter, 100, partyList);
-
-        Communism mandoria = new Communism("Mandoria",7000, 400000, starter);
-
-
-    }
-
-    public static void holeBugetUsed(Map<COFOG, Double> budget){
-        double sum = 0;
-        for(double procent : budget.values()){
-            sum += procent;
-        }
-        if (Math.abs(sum - 100) > 0.0001) {
-            throw new IllegalArgumentException("All the buget is not used");
-        }
+        return partyList;
     }
 }

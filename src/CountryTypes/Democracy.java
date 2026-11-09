@@ -10,14 +10,14 @@ import src.CountryTypes.SmalerClasses.Party;
 public class Democracy extends Country {
     private Parliament parliament;
 
-    public Democracy(String name, int residents, Map<COFOG, Double> budget, int parlamentSeats, Party[] parties) {
-        super(name, residents, budget);
+    public Democracy(String name, int residents, double taxPercent, Map<COFOG, Double> budget, int parlamentSeats, Party[] parties) {
+        super(name, residents, taxPercent, budget);
         parliament = new Parliament(parlamentSeats, parties);
     }
 
-    public Democracy(String name, int residents, double fund, Map<COFOG, Double> budget, int parlamentSeats,
+    public Democracy(String name, int residents, double fund, double taxPercent, Map<COFOG, Double> budget, int parlamentSeats,
             Party[] parties) {
-        super(name, residents, fund, budget);
+        super(name, residents, fund, taxPercent, budget);
         parliament = new Parliament(parlamentSeats, parties);
     }
 
@@ -57,16 +57,11 @@ public class Democracy extends Country {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Democracy: ").append(getName())
-                .append("\nresidents = ").append(getResidents())
-                .append("\nfund = ").append(getFund())
-                .append("\nbudget:");
+        sb.append("\nParliament: ");
 
-        for (Map.Entry<COFOG, Double> entry : getBudget().entrySet()) {
-            sb.append("\n  ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" %");
+        for(Party p : parliament.getParties()){
+            sb.append(String.format("\n  %s: %s", "Party " + p.getName(), "Parliament seats: " + p.getParlamentSeats()));
         }
-
-        sb.append("\nparliament = ").append(parliament);
-        return sb.toString();
+        return super.toString() + sb;
     }
 }

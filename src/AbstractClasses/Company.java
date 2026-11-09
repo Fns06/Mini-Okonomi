@@ -2,72 +2,66 @@ package src.AbstractClasses;
 
 public abstract class Company {
     private String name;
-    private int employees;
-    private double money;
-    private double salaryMTH;
-    private double value;
-    private int stocks;
-    private double percentRisk;
+    private int employeesCount;
+    private double cash;
+    private double revenueYear;
+    private double monthlySalary;
+    private int stocks; // Later
+    private double sharePrice; // Later
+    private double paymentPercent;
+    private double taxPercent;
 
-    public Company(String name, int employees, int stocks, double percentRisk) {
+    public Company(String name, int employeesCount, double cash, int stocks, double sharePrice, double paymentPercent,
+            double taxPercent) {
+        if (name == null || employeesCount <= 0 || cash < 0 || stocks <= 0 || sharePrice < 0
+                || (paymentPercent < 0 || paymentPercent > 1) || (taxPercent < 0 || taxPercent > 1)) {
+            throw new IllegalArgumentException("Illegal value in a variable");
+        }
         this.name = name;
-        this.employees = employees;
-        this.money = 0.0;
+        this.employeesCount = employeesCount;
+        this.cash = cash;
+        this.monthlySalary = calculatemonthlySalary();
         this.stocks = stocks;
-        setPercentRisk(percentRisk);
-        this.salaryMTH = calculateSalaryMTH();
-        this.value = calculateValue();
-    }
-
-    public Company(String name, int employees, double money, int stocks, double percentRisk) {
-        this.name = name;
-        this.employees = employees;
-        this.money = money;
-        this.stocks = stocks;
-        setPercentRisk(percentRisk);
-        this.salaryMTH = calculateSalaryMTH();
-        this.value = calculateValue();
+        this.sharePrice = sharePrice;
+        this.paymentPercent = paymentPercent;
+        this.taxPercent = taxPercent;
     }
 
     // Helping methods
-    public void addMoney(double money) {
-        this.money += money;
+    public void addMoney(double cash) {
+        this.cash += cash;
     }
 
-    public void subtractMoney(double money) {
-        this.money -= money;
+    public void subtractMoney(double cash) {
+        this.cash -= cash;
     }
 
-    public double getValuePerStock() {
-        return value / stocks;
+    public double getMarketValue() {
+        return stocks * sharePrice;
     }
 
     public boolean canCoverPayrollMTH(int months) {
-        return money >= salaryMTH * employees * months;
+        return cash >= monthlySalary * employeesCount * months;
     }
 
     public boolean canCoverPayrollYear(int years) {
-        return money >= salaryMTH * employees * years * 12;
+        return cash >= monthlySalary * employeesCount * years * 12;
     }
 
     public int MTHsPayrollCanBePayed() {
-        return (int) (money / (salaryMTH * employees));
+        return (int) (cash / (monthlySalary * employeesCount));
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-            "Name: %s, Employees: %d, Monthly salary: %.2f, Money: %.2f, Value: %.2f, Stocks: %d",
-            name, employees, salaryMTH, money, value, stocks);
+    public boolean positiveRevenue() {
+        if (paymentPercent + taxPercent < 1) {
+            return true;
+        }
+        return false;
     }
 
     // Calculators
-    public double calculateSalaryMTH() {
-        return 0; // TODO
-    }
-
-    public double calculateValue() {
-        return 0; // TODO
+    public double calculatemonthlySalary() {
+        return (revenueYear * paymentPercent / employeesCount) / 12;
     }
 
     // Getters
@@ -76,27 +70,27 @@ public abstract class Company {
     }
 
     public int getEmployees() {
-        return employees;
+        return employeesCount;
     }
 
-    public double getSalaryMTH() {
-        return salaryMTH;
+    public double getmonthlySalary() {
+        return monthlySalary;
     }
 
     public double getMoney() {
-        return money;
-    }
-
-    public double getValue() {
-        return value;
+        return cash;
     }
 
     public int getStocks() {
         return stocks;
     }
 
-    public double getPercentRisk() {
-        return percentRisk;
+    public double getSharePrice() {
+        return sharePrice;
+    }
+
+    public double getPaymentPercent() {
+        return paymentPercent;
     }
 
     // Setters
@@ -104,30 +98,34 @@ public abstract class Company {
         this.name = name;
     }
 
-    public void setEmployees(int employees) {
-        this.employees = employees;
+    public void setEmployees(int employeesCount) {
+        this.employeesCount = employeesCount;
     }
 
-    public void setSalaryMTH(double salaryMTH) {
-        this.salaryMTH = salaryMTH;
+    public void setmonthlySalary(double monthlySalary) {
+        this.monthlySalary = monthlySalary;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
+    public void setMoney(double cash) {
+        this.cash = cash;
     }
 
     public void setStocks(int stocks) {
         this.stocks = stocks;
     }
 
-    public void setPercentRisk(double percentRisk) {
-        if (percentRisk < 0 || percentRisk > 100) {
-            throw new IllegalArgumentException("Percentage risk must be between 0 and 100");
-        }
-        this.percentRisk = percentRisk;
+    public void setSharePrice(double sharePrice) {
+        this.sharePrice = sharePrice;
+    }
+
+    public void setPaymentPercent(double paymentPercent) {
+        this.paymentPercent = paymentPercent;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Name: %s, Employees: %d, Monthly salary: %.2f, Money: %.2f, Stocks: %d, Share price: %.2f",
+                name, employeesCount, monthlySalary, cash, stocks, sharePrice);
     }
 }

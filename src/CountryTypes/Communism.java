@@ -6,12 +6,12 @@ import src.CountryTypes.SmalerClasses.COFOG;
 
 public class Communism extends Country{
     
-    public Communism(String name, int residents, Map<COFOG, Double> budget) {
-        super(name, residents, budget);
+    public Communism(String name, int residents, double taxPercent, Map<COFOG, Double> budget) {
+        super(name, residents, taxPercent, budget);
     }
 
-    public Communism(String name, int residents, double fund, Map<COFOG, Double> budget) {
-        super(name, residents, fund, budget);
+    public Communism(String name, int residents, double fund, double taxPercent, Map<COFOG, Double> budget) {
+        super(name, residents, fund, taxPercent, budget);
     }
 
     public void calculateYearlyBudget(){
@@ -19,17 +19,8 @@ public class Communism extends Country{
         // Should use values from real data
     }
 
-    @Override
+        @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Democracy: ").append(getName())
-        .append("\nresidents = ").append(getResidents())
-        .append("\nfund = ").append(getFund())
-        .append("\nbudget:");
-
-        for (Map.Entry<COFOG, Double> entry : getBudget().entrySet()) {
-            sb.append("\n  ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" %");
-        }
-        return sb.toString();
+        return super.toString();
     }
 }
